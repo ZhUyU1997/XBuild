@@ -19,13 +19,20 @@ endif
 
 ifneq ($(wildcard $(srctree)/$(src)/Makefile),)
 include $(srctree)/$(src)/Makefile
+else
+SRC			:=	*.S *.c
+endif # ifneq ($(wildcard $(srctree)/$(src)/Makefile),)
 
-X_SUBDIR	:=	$(patsubst %/,$(obj)/%,$(filter %/, $(SRC)))
-X_SUB_OBJ	:=	$(foreach f,$(X_SUBDIR),$(f)/built-in.o)
-X_CUR_OBJ	:=	$(patsubst %,$(obj)/%.o,$(filter-out %/, $(SRC)))
-X_EXTRA		:=	$(patsubst %,$(obj)/%.o,$(filter-out %/, $(X_EXTRA)))
+X_CUR_OBJ	:=	$(foreach f,$(filter-out %/, $(SRC)),$(wildcard $(srctree)/$(src)/$(f)))
+X_CUR_OBJ	:=	$(patsubst $(srctree)/$(src)/%,$(obj)/%.o,$(X_CUR_OBJ))
+X_SUBDIR	:=	$(filter %/,$(foreach f,$(filter %/, $(SRC)),$(wildcard $(srctree)/$(src)/$(f))))
+X_SUB_OBJ	:=	$(patsubst $(srctree)/$(src)/%/,$(obj)/%/built-in.o,$(X_SUBDIR))
 
 X_OBJS		:=	$(X_CUR_OBJ) $(X_SUB_OBJ)
+# case: $(obj)==.
+X_OBJS		:=	$(patsubst $(objtree)/%,%,$(abspath $(X_OBJS)))
+X_TARGET	:=	$(X_BUILTIN) $(X_OBJS) $(X_EXTRA)
+X_DEPS		:=	$(wildcard $(foreach f,$(X_TARGET),$(dir $(f)).$(notdir $(f)).cmd))
 
 # update time
 $(sort $(X_SUB_OBJ)) : $(X_SUBDIR) ;
@@ -36,17 +43,6 @@ clean: $(X_SUBDIR)
 
 $(X_SUBDIR) :
 	@$(MAKE) $(build)=$@ $(MAKECMDGOALS)
-
-else
-
-SRC			:=	$(wildcard $(srctree)/$(src)/*.S) $(wildcard $(srctree)/$(src)/*.c)
-X_OBJS		:=	$(patsubst $(srctree)/$(src)/%,$(obj)/%.o,$(filter-out %/, $(SRC)))
-endif # ifneq ($(wildcard $(srctree)/$(src)/Makefile),)
-
-# case: $(obj)==.
-X_OBJS		:=	$(patsubst $(objtree)/%,%,$(abspath $(X_OBJS)))
-X_TARGET	:=	$(X_BUILTIN) $(X_OBJS) $(X_EXTRA)
-X_DEPS		:=	$(wildcard $(foreach f,$(X_TARGET),$(dir $(f)).$(notdir $(f)).cmd))
 
 # Create output directory
 _dummy		:=	$(shell $(MKDIR) $(dir $(X_TARGET)))
