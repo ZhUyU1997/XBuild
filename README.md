@@ -3,13 +3,13 @@ XBuild是一个基于Makefile的构建框架，旨在提供轻量级的编译功
 
 ## Examples
 ---
-- Hello World 
+- Hello World (**examples/hello**)
 
 ```makefile
 sinclude ../../scripts/env.mk
 
 X_NAME		:=	hello
-SRCDIRS		+=	.
+SRC			+=	main.c
 
 $(X_NAME):
 	@echo [OUTPUT] $(X_NAME)

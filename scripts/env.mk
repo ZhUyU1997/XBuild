@@ -13,19 +13,10 @@ MAKEFLAGS	+= -rR -s --no-print-directory
 BUILD_SRC	:=
 BUILD_OBJ	:=
 
-MKDIR		:=	mkdir -p
-RMDIR		:=	rmdir -p
-CP			:=	cp -af
-RM			:=	rm -rf
-CD			:=	cd
-MV			:=	mv
-FIND		:=	find
-
-
-export RM CP CD MV FIND MKDIR HOSTOS SUFFIX
-
 ifeq ($(BUILD_SRC),)
 XBUILD_DIR	:= $(abspath $(lastword $(MAKEFILE_LIST)/../))
+
+include $(XBUILD_DIR)/define.mk
 
 BUILD_OBJ	:= .
 ifeq ("$(origin O)", "command line")

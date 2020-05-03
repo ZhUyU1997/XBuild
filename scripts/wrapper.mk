@@ -1,18 +1,28 @@
 all:
+# Don't include env.mk again
+include_Makefile_env:=1
+export include_Makefile_env
 
 include $(XBUILD_DIR)/define.mk
-include $(XBUILD_DIR)/env.mk
 include $(XBUILD_DIR)/include.mk
 
-SRCDIRS		:=
-INCDIRS		:=
+srctree		:= $(BUILD_SRC)
+objtree		:= $(CURDIR)
+src			:= .
+obj			:= .
+
+VPATH		:= $(srctree)
+
+export srctree objtree VPATH
+
+ROOT_DIR	:= .
 
 # config
 X_CONF_DIR	:=	$(obj)/include/config
 X_CONF_FILE	:=	$(srctree)/include/xconfigs.h
 
 # compiler's flags
-X_ASFLAGS	:=	
+X_ASFLAGS	:=
 X_CFLAGS	:=
 X_LDFLAGS	:=
 X_LIBS		:=
@@ -24,19 +34,16 @@ X_LIBDIRS	:=
 X_LDFLAGS	:=
 
 X_INCDIRS	=	$(patsubst %, -I %, $(foreach d,$(INCDIRS),$(wildcard $(srctree)/$(d))))
-X_OBJS		=	$(patsubst $(srctree)/%, %/built-in.o, $(foreach d,$(SRCDIRS),$(wildcard $(srctree)/$(d))))
-
-include $(srctree)/Makefile
 
 ifneq ($(wildcard $(X_CONF_FILE)),)
 X_CPPFLAGS	+=	-include $(X_CONF_DIR)/autoconf.h
 endif
 
-export BUILD_OBJ BUILD_SRC
+export BUILD_OBJ BUILD_SRC X_CONF_DIR
 export AS AR CC LD CPP CXX
 export X_ASFLAGS X_INCDIRS X_CFLAGS X_CPPFLAGS
 
-PHONY	+=	all clean xbegin xend xclean conf fixdep $(SRCDIRS)
+PHONY	+=	all clean xbegin xend xclean conf fixdep $(ROOT_DIR)
 
 ifneq ($(wildcard $(X_CONF_FILE)),)
 include $(XBUILD_DIR)/conf.mk
@@ -46,7 +53,7 @@ endif
 
 xbegin: $(objtree)/fixdep$(SUFFIX)
 all: xend
-xend: $(X_NAME)
+xend: $(ROOT_DIR)
 
 $(objtree)/fixdep$(SUFFIX): $(XBUILD_DIR)/fixdep.c
 	@echo [HOSTCC] $(XBUILD_DIR)/fixdep.c
@@ -56,26 +63,21 @@ else
 	@$(HOSTCC) -o $@ $<
 endif
 
-$(X_NAME): $(X_OBJS)
-
-$(X_OBJS): $(SRCDIRS) ;
-
-ifeq ($(MAKECMDGOALS),clean)
-$(SRCDIRS):
-	@$(MAKE) $(build)=$@  clean
-else
-$(SRCDIRS): xbegin
-	@$(MAKE) $(build)=$@
+ifneq ($(MAKECMDGOALS),clean)
+$(ROOT_DIR): xbegin
 endif
 
-clean: $(SRCDIRS)
+$(ROOT_DIR):
+	@$(MAKE) $(build)=$@ $(MAKECMDGOALS)
+
+clean: $(ROOT_DIR)
 ifneq ($(wildcard $(objtree)/fixdep$(SUFFIX)),)
 	@echo [RM] fixdep
 	@$(RM) $(objtree)/fixdep$(SUFFIX)
 endif
-ifneq ($(wildcard include/config),)
-	@echo [RM] include/config
-	@$(RM) include/config
+ifneq ($(wildcard $(X_CONF_DIR)),)
+	@echo [RM] $(X_CONF_DIR)
+	@$(RM) $(X_CONF_DIR)
 endif
 ifneq ($(wildcard $(X_NAME)),)
 	@echo [RM] $(X_NAME)$(SUFFIX)

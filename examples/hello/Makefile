@@ -1,7 +1,7 @@
 sinclude ../../scripts/env.mk
 
 X_NAME		:=	hello
-SRCDIRS		+=	.
+SRC			+=	main.c
 
 $(X_NAME):
 	@echo [OUTPUT] $(X_NAME)

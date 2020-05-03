@@ -1,3 +1,11 @@
+MKDIR		:=	mkdir -p
+RMDIR		:=	rmdir -p
+CP			:=	cp -af
+RM			:=	rm -rf
+CD			:=	cd
+MV			:=	mv
+FIND		:=	find
+
 # System environment variable.
 ifeq ($(OS),Windows_NT)
 	HOSTOS		:= windows
@@ -19,14 +27,7 @@ else
 	SUFFIX	:=
 endif
 
-srctree		:= $(BUILD_SRC)
-objtree		:= $(CURDIR)
-src			:= .
-obj			:= .
-
-VPATH		:= $(srctree)
-
-export srctree objtree VPATH
+export RM CP CD MV FIND MKDIR HOSTOS SUFFIX
 
 CROSS_COMPILE	?=
 
