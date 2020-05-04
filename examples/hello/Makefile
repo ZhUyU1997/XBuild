@@ -1,6 +1,6 @@
 sinclude ../../scripts/env.mk
 
-X_NAME		:=	hello
+NAME		:=	hello
 SRC			+=	main.c
 
 $(X_NAME):

@@ -68,7 +68,7 @@ $(ROOT_DIR): xbegin
 endif
 
 $(ROOT_DIR):
-	@$(MAKE) $(build)=$@ $(MAKECMDGOALS)
+	@$(MAKE) $(build)=$@ ISMODULE=1 $(MAKECMDGOALS)
 
 clean: $(ROOT_DIR)
 ifneq ($(wildcard $(objtree)/fixdep$(SUFFIX)),)
