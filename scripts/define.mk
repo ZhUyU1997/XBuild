@@ -23,11 +23,13 @@ endif
 
 ifeq ($(HOSTOS),windows)
 	SUFFIX	:= .exe
+	SHARED_SUFFIX	:= dll
 else
 	SUFFIX	:=
+	SHARED_SUFFIX	:= so
 endif
 
-export RM CP CD MV FIND MKDIR HOSTOS SUFFIX
+export RM CP CD MV FIND MKDIR HOSTOS SUFFIX SHARED_SUFFIX
 
 CROSS_COMPILE	?=
 

@@ -21,3 +21,33 @@ $(obj)/%.S.o : $(src)/%.S FORCE
 $(obj)/%.c.o : $(src)/%.c FORCE
 	$(call if_changed_dep,cc_o_c)
 
+# For module target
+ifneq ($(NAME),)
+ifeq ($(origin CUSTOM_TARGET_CMD),undefined)
+quiet_cmd_link_o_binary = [OUTPUT] $(obj)/$(NAME)$(SUFFIX)
+cmd_link_o_binary= $(CC) $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS)
+
+quiet_cmd_ar_o_static = [AR] $(obj)/lib$(NAME).a
+cmd_ar_o_static = $(if $(strip $(X_OBJS)), \
+		      $(AR) rc $@ $(filter $(X_OBJS), $^), \
+		      $(RM) $@;$(AR) rcs $@)
+
+quiet_cmd_link_o_shared = [LD] $(obj)/lib$(NAME).$(SHARED_SUFFIX)
+cmd_link_o_shared = $(CC) -shared $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS)
+
+$(obj)/$(NAME)$(SUFFIX) : $(X_OBJS) FORCE
+	$(call if_changed,link_o_binary)
+
+$(obj)/lib$(NAME).a : $(X_OBJS) FORCE
+	$(call if_changed,ar_o_static)
+
+$(obj)/lib$(NAME).$(SHARED_SUFFIX) : $(X_OBJS) FORCE
+	$(call if_changed,link_o_shared)
+else
+quiet_cmd_link_o_custom = [OUTPUT] $(obj)/$(NAME)
+cmd_link_o_custom = $(CUSTOM_TARGET_CMD)
+
+$(obj)/$(NAME) : $(X_OBJS) FORCE
+	$(call if_changed,link_o_custom)
+endif
+endif
