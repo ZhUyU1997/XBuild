@@ -10,10 +10,6 @@ sinclude ../../scripts/env.mk
 
 NAME		:=	hello
 SRC			+=	main.c
-
-$(X_NAME):
-	@echo [OUTPUT] $(X_NAME)
-	@$(CC) -o $(X_NAME) $(X_OBJS)
 ```
 导入`XBuild`，通常只需要在顶层Makefile设置
 ```makefile
@@ -27,14 +23,12 @@ NAME		:=	hello
 ```makefile
 SRC			+=	main.c
 ```
-定义最终目标的规则
+- 静态库/动态库 (`examples/library`)
 ```makefile
-$(X_NAME):
-	@echo [OUTPUT] $(X_NAME)
-	@$(CC) -o $(X_NAME) $(X_OBJS)
+sinclude ../../scripts/env.mk
+
+#TARGET_TYPE	:=	shared
+TARGET_TYPE	:=	static
+NAME		:=	hello
+SRC			+=	hello.c
 ```
-应该注意到这里使用了`X_NAME`，而非`NAME`。通常`X_`开头的表示`XBuild`内部变量。
-
-`X_NAME`会自动添加后缀名，例如在Windows平台，`X_NAME=hello.exe`	。
-
-`X_OBJS`则代表此模块所有的`.o`文件。在本例中`X_OBJS=hello.o`。
