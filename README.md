@@ -32,3 +32,4 @@ TARGET_TYPE	:=	static
 NAME		:=	hello
 SRC			+=	hello.c
 ```
+指定`TARGET_TYPE`为`static/shared`，目标输出为静态库/动态库。默认为binary。

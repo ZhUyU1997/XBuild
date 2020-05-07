@@ -45,3 +45,5 @@ OD			:=	$(CROSS_COMPILE)objdump
 NM			:=	$(CROSS_COMPILE)nm
 
 HOSTCC		:=	gcc
+
+export AS AR CC LD CPP CXX OC OD NM HOSTCC

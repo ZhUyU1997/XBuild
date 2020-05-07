@@ -25,23 +25,19 @@ X_CONF_FILE	:=	$(srctree)/include/xconfigs.h
 X_ASFLAGS	:=
 X_CFLAGS	:=
 X_LDFLAGS	:=
-X_LIBS		:=
-X_NAME		:=	a.out
-X_DEFINES	:=
-X_CPPFLAGS	:=
-
 X_LIBDIRS	:=
-X_LDFLAGS	:=
-
-X_INCDIRS	=	$(patsubst %, -I %, $(foreach d,$(INCDIRS),$(wildcard $(srctree)/$(d))))
+X_LIBS		:=
+X_DEFINES	:=
+X_INCDIRS	:=
+X_INCS		:=
+X_CPPFLAGS	:=
 
 ifneq ($(wildcard $(X_CONF_FILE)),)
 X_CPPFLAGS	+=	-include $(X_CONF_DIR)/autoconf.h
 endif
 
+export X_ASFLAGS X_CFLAGS X_LDFLAGS X_LIBDIRS X_LIBS X_DEFINES X_LDFLAGS X_INCDIRS X_INCS
 export BUILD_OBJ BUILD_SRC X_CONF_DIR
-export AS AR CC LD CPP CXX
-export X_ASFLAGS X_INCDIRS X_CFLAGS X_CPPFLAGS
 
 PHONY	+=	all clean xbegin xend xclean conf fixdep $(ROOT_DIR)
 
@@ -79,10 +75,7 @@ ifneq ($(wildcard $(X_CONF_DIR)),)
 	@echo [RM] $(X_CONF_DIR)
 	@$(RM) $(X_CONF_DIR)
 endif
-ifneq ($(wildcard $(X_NAME)),)
-	@echo [RM] $(X_NAME)$(SUFFIX)
-	@$(RM) $(X_NAME)$(SUFFIX)
-endif
+
 PHONY += FORCE
 
 FORCE:

@@ -25,7 +25,7 @@ $(obj)/%.c.o : $(src)/%.c FORCE
 ifneq ($(NAME),)
 ifeq ($(origin CUSTOM_TARGET_CMD),undefined)
 quiet_cmd_link_o_binary = [OUTPUT] $(obj)/$(NAME)$(SUFFIX)
-cmd_link_o_binary= $(CC) $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS)
+cmd_link_o_binary= $(CC) $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS) $(X_LDLIBS)
 
 quiet_cmd_ar_o_static = [AR] $(obj)/lib$(NAME).a
 cmd_ar_o_static = $(if $(strip $(X_OBJS)), \
@@ -33,7 +33,7 @@ cmd_ar_o_static = $(if $(strip $(X_OBJS)), \
 		      $(RM) $@;$(AR) rcs $@)
 
 quiet_cmd_link_o_shared = [LD] $(obj)/lib$(NAME).$(SHARED_SUFFIX)
-cmd_link_o_shared = $(CC) -shared $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS)
+cmd_link_o_shared = $(CC) -shared $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS)  $(X_LDLIBS)
 
 $(obj)/$(NAME)$(SUFFIX) : $(X_OBJS) FORCE
 	$(call if_changed,link_o_binary)

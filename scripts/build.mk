@@ -4,6 +4,8 @@ __build:
 src			:=	$(obj)
 
 SRC			:=
+INCDIRS		:=
+INCS		:=
 NAME		:=
 MODULE		:=
 # binary static shared
@@ -29,6 +31,7 @@ ifeq ($(ISMODULE),0)
 X_BUILTIN	:=	$(obj)/built-in.o
 endif
 
+# X_NAME
 ifneq ($(NAME),)
 X_NAME		=	$(obj)/$(NAME)
 ifeq ($(strip $(TARGET_TYPE)),binary)
@@ -44,6 +47,13 @@ ifeq ($(strip $(filter binary static shared,$(TARGET_TYPE))),)
 $(error undefined TARGET_TYPE=$(TARGET_TYPE))
 endif
 endif
+
+# FLAGS
+X_INCDIRS	+= $(patsubst %, -I %, $(foreach d,$(INCDIRS),$(wildcard $(srctree)/$(d))))
+X_CPPFLAGS	:= $(X_INCDIRS) $(patsubst %, -D%, $(X_DEFINES)) $(patsubst %, -include %, $(foreach d,$(X_INCS),$(wildcard $(srctree)/$(d))))
+X_LDLIBS	:= $(patsubst %, -L%, $(X_LIBDIRS)) $(patsubst %, -l%, $(X_LIBS))
+
+export X_ASFLAGS X_CFLAGS X_LDFLAGS X_LIBDIRS X_LIBS X_DEFINES X_LDFLAGS X_INCDIRS X_INCS
 
 X_CUR_OBJ	:=	$(foreach f,$(filter-out %/, $(SRC)),$(wildcard $(srctree)/$(src)/$(f)))
 X_CUR_OBJ	:=	$(patsubst $(srctree)/$(src)/%,$(obj)/%.o,$(X_CUR_OBJ))
