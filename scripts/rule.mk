@@ -44,7 +44,7 @@ $(obj)/lib$(NAME).a : $(X_OBJS) FORCE
 $(obj)/lib$(NAME).$(SHARED_SUFFIX) : $(X_OBJS) FORCE
 	$(call if_changed,link_o_shared)
 else
-quiet_cmd_link_o_custom = [OUTPUT] $(obj)/$(NAME)
+quiet_cmd_link_o_custom =
 cmd_link_o_custom = $(CUSTOM_TARGET_CMD)
 
 $(obj)/$(NAME) : $(X_OBJS) FORCE

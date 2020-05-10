@@ -5,13 +5,11 @@ src			:=	$(obj)
 
 SRC			:=
 INCDIRS		:=
-INCS		:=
 NAME		:=
 MODULE		:=
 # binary static shared
 TARGET_TYPE	:=	binary
 
-X_MODULE	=	$(patsubst %/,$(obj)/%,$(MODULE))
 X_SUBDIR	:=
 X_SUB_OBJ	:=
 X_EXTRA		:=
@@ -31,26 +29,25 @@ ifeq ($(ISMODULE),0)
 X_BUILTIN	:=	$(obj)/built-in.o
 endif
 
+X_MODULE	=	$(MODULE)
+
 # X_NAME
 ifneq ($(NAME),)
 X_NAME		=	$(obj)/$(NAME)
 ifeq ($(strip $(TARGET_TYPE)),binary)
 X_NAME		=	$(obj)/$(NAME)$(SUFFIX)
-endif
-ifeq ($(strip $(TARGET_TYPE)),static)
+else ifeq ($(strip $(TARGET_TYPE)),static)
 X_NAME		=	$(obj)/lib$(NAME).a
-endif
-ifeq ($(strip $(TARGET_TYPE)),shared)
+else ifeq ($(strip $(TARGET_TYPE)),shared)
 X_NAME		=	$(obj)/lib$(NAME).$(SHARED_SUFFIX)
-endif
-ifeq ($(strip $(filter binary static shared,$(TARGET_TYPE))),)
+else ifeq ($(strip $(filter binary static shared,$(TARGET_TYPE))),)
 $(error undefined TARGET_TYPE=$(TARGET_TYPE))
 endif
 endif
 
 # FLAGS
 X_INCDIRS	+= $(patsubst %, -I %, $(foreach d,$(INCDIRS),$(wildcard $(srctree)/$(d))))
-X_CPPFLAGS	:= $(X_INCDIRS) $(patsubst %, -D%, $(X_DEFINES)) $(patsubst %, -include %, $(foreach d,$(X_INCS),$(wildcard $(srctree)/$(d))))
+X_CPPFLAGS	:= $(X_INCDIRS) $(patsubst %, -D%, $(X_DEFINES)) $(patsubst %, -include %, $(X_INCS))
 X_LDLIBS	:= $(patsubst %, -L%, $(X_LIBDIRS)) $(patsubst %, -l%, $(X_LIBS))
 
 export X_ASFLAGS X_CFLAGS X_LDFLAGS X_LIBDIRS X_LIBS X_DEFINES X_LDFLAGS X_INCDIRS X_INCS
@@ -76,7 +73,7 @@ clean: $(X_SUBDIR) $(X_MODULE)
 $(X_SUBDIR):
 	@$(MAKE) $(build)=$@ ISMODULE=0 $(MAKECMDGOALS)
 $(X_MODULE):
-	@$(MAKE) $(build)=$@ ISMODULE=1 $(MAKECMDGOALS)
+	@$(MAKE) $(build)=$(obj)/$@ ISMODULE=1 $(MAKECMDGOALS)
 
 # Create output directory
 _dummy		:=	$(shell $(MKDIR) $(obj) $(dir $(X_TARGET)))
@@ -87,15 +84,16 @@ sinclude $(X_DEPS)
 
 export X_ASFLAGS X_CFLAGS X_CPPFLAGS
 
-__build : $(X_TARGET) $(X_MODULE);
+__build : $(X_TARGET) $(X_MODULE)
+	$(CUSTOM_AFTER_BUILD)
 
 $(X_TARGET): $(X_MODULE)
 $(X_NAME): $(X_OBJS)
 
 clean:
-ifneq ($(strip $(wildcard $(X_TARGET) $(X_DEPS) $(X_NAME))),)
+ifneq ($(strip $(wildcard $(X_TARGET) $(obj)/.*.cmd $(X_NAME))),)
 	@echo [RM] $(obj)
-	@$(RM) $(X_TARGET) $(X_DEPS) $(X_NAME)
+	@$(RM) $(X_TARGET) $(wildcard $(obj)/.*.cmd) $(X_NAME)
 endif
 
 include $(XBUILD_DIR)/rule.mk
