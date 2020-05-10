@@ -167,6 +167,8 @@ void munmap(char *text, HANDLE hMap) {
 #define INT_NFIG ntohl(0x4e464947)
 #define INT_FIG_ ntohl(0x4649475f)
 
+#define X_CONF_DIR "include/config/"
+
 char *target;
 char *depfile;
 char *cmdline;
@@ -268,7 +270,7 @@ static void use_config(const char *m, int slen)
 
 	define_config(m, slen, hash);
 
-	printf("    $(wildcard include/config/");
+	printf("    $(wildcard "X_CONF_DIR);
 	for (i = 0; i < slen; i++)
 		putchar(tolower(m[i]));
 	printf(".h) \\\n");
@@ -406,7 +408,7 @@ static void parse_dep_file(void *map, size_t len)
 			if (s[i] == '\\') s[i] = '/';
 #endif
 
-		if (strrcmp(s, "include/config/autoconf.h")) {
+		if (strrcmp(s, X_CONF_DIR"autoconf.h")) {
 			/*
 			 * Do not list the source file as dependency, so that
 			 * kbuild is not confused if a .c file is rewritten
