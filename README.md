@@ -18,8 +18,8 @@ make clean
 ```makefile
 sinclude ../../scripts/env.mk
 
-NAME		:=	hello
-SRC			+=	main.c
+NAME        :=  hello
+SRC         +=  main.c
 ```
 导入`XBuild`，通常只需要在顶层Makefile设置
 ```makefile
@@ -27,20 +27,20 @@ sinclude ../../scripts/env.mk
 ```
 定义最终目标
 ```makefile
-NAME		:=	hello
+NAME        :=  hello
 ```
 添加需要编译的源码
 ```makefile
-SRC			+=	main.c
+SRC         +=  main.c
 ```
 - 静态库/动态库 (`examples/library`)
 ```makefile
 sinclude ../../scripts/env.mk
 
-#TARGET_TYPE	:=	shared
-TARGET_TYPE	:=	static
-NAME		:=	hello
-SRC			+=	hello.c
+#TARGET_TYPE    :=	shared
+TARGET_TYPE :=  static
+NAME        :=  hello
+SRC         +=  hello.c
 ```
 指定`TARGET_TYPE`为`static/shared`，目标输出为`静态库/动态库`。
 
@@ -51,8 +51,8 @@ SRC			+=	hello.c
 ```makefile
 sinclude ../../scripts/env.mk
 
-NAME		:=	hello.bin
-SRC			+=	main.c
+NAME        :=  hello.bin
+SRC         +=  main.c
 
 define CUSTOM_TARGET_CMD
 echo [CUSTOM TARGET] $@; \
@@ -64,11 +64,11 @@ endef
 ```makefile
 sinclude ../../scripts/env.mk
 
-X_DEFINES	+=	HELLO=1 #定义HELLO宏，等效代码(#define HELLO 1)
-X_CFLAGS	+= -std=c11 #设置C语言标准为C11
+X_DEFINES   +=  HELLO=1 #定义HELLO宏，等效代码(#define HELLO 1)
+X_CFLAGS    +=  -std=c11 #设置C语言标准为C11
 
-NAME		:=	hello
-SRC			+=	main.c
+NAME        :=  hello
+SRC         +=  main.c
 ```
 最终命令为：
 ```sh
@@ -97,9 +97,9 @@ X_LDLIBS    <- X_LIBDIRS + X_LIBS
 - 模块化 (`examples/module`)
 ```makefile
 sinclude scripts/env.mk
-MODULE		+=	moduleA
-MODULE		+=	moduleB
-MODULE		+=	moduleC
+MODULE      +=  moduleA
+MODULE      +=  moduleB
+MODULE      +=  moduleC
 
 moduleA: moduleB
 moduleB: moduleC
