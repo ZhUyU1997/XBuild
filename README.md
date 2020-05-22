@@ -84,16 +84,13 @@ X_LIBS      #依赖库(e.g. hello)
 X_DEFINES   #预处理宏定义(e.g. DEBUG=1)
 X_INCDIRS   #预处理头文件路径(e.g. include)
 X_INCS      #预处理包含头文件(e.g. include/config.h)
-INCDIRS     #用户定义预处理头文件路径
-            #为了继承父级Makefile的设置，同时支持自动处理路径为命令行参数，单独定义一个变量区别于X_INCDIRS
-X_INCDIRS   <- X_INCDIRS(parent define) + INCDIRS
-#头文件路径命令行参数(e.g. -I include)
+
 X_CPPFLAGS  <- X_INCDIRS + X_DEFINES + X_INCS
 #预处理命令行参数(e.g. -I include -DDEBUG=1 -include include/config.h)
 X_LDLIBS    <- X_LIBDIRS + X_LIBS
 #链接器链接库命令行参数(e.g. -Llibs -lhello)
 ```
-`X_INCDIRS`，`X_CPPFLAGS`，`X_LDLIBS`会自动将数据加工为编译器可以识别的命令行参数，可以避免用户繁琐的字符串处理，这也意味用户不应该主动设置这些变量。
+`X_CPPFLAGS`，`X_LDLIBS`会自动将数据加工为编译器可以识别的命令行参数，可以避免用户繁琐的字符串处理，这也意味用户不应该主动设置这些变量。
 - 模块化 (`examples/module`)
 ```makefile
 sinclude scripts/env.mk

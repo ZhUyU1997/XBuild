@@ -46,8 +46,7 @@ endif
 endif
 
 # FLAGS
-X_INCDIRS	+= $(patsubst %, -I %, $(foreach d,$(INCDIRS),$(wildcard $(srctree)/$(d))))
-X_CPPFLAGS	:= $(X_INCDIRS) $(patsubst %, -D%, $(X_DEFINES)) $(patsubst %, -include %, $(X_INCS))
+X_CPPFLAGS	:= $(patsubst %, -I %, $(foreach d,$(X_INCDIRS),$(wildcard $(srctree)/$(d)))) $(patsubst %, -D%, $(X_DEFINES)) $(patsubst %, -include %, $(X_INCS))
 X_LDLIBS	:= $(patsubst %, -L%, $(X_LIBDIRS)) $(patsubst %, -l%, $(X_LIBS))
 
 export X_ASFLAGS X_CFLAGS X_LDFLAGS X_LIBDIRS X_LIBS X_DEFINES X_LDFLAGS X_INCDIRS X_INCS
