@@ -29,7 +29,22 @@ else
 	SHARED_SUFFIX	:= so
 endif
 
-export RM CP CD MV FIND MKDIR HOSTOS SUFFIX SHARED_SUFFIX
+ifeq ($(HOSTOS),linux)
+ECHO		:= /bin/echo -e
+else
+ECHO		:= echo -e
+endif
+
+export RM CP CD MV FIND MKDIR HOSTOS SUFFIX SHARED_SUFFIX ECHO
+
+ECHO_RM		:=\e[32mRM\e[0m
+ECHO_CC		:=\e[32mCC\e[0m
+ECHO_LD		:=\e[32mLD\e[0m
+ECHO_AR		:=\e[35mAR\e[0m
+ECHO_HOSTCC	:=\e[33mHOSTCC\e[0m
+ECHO_OUTPUT	:=\e[35mOUTPUT\e[0m
+
+export ECHO_RM ECHO_CC ECHO_LD ECHO_AR ECHO_OUTPUT ECHO_HOSTCC
 
 CROSS_COMPILE	?=
 

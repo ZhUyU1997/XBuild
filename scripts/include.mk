@@ -11,7 +11,7 @@ space   := $(empty) $(empty)
 # Escape single quote for use in echo statements
 escsq = $(subst $(squote),'\$(squote)',$1)
 
-echo-cmd = $(if $(quiet_cmd_$(1)),echo '$(quiet_cmd_$(1))';)
+echo-cmd = $(if $(quiet_cmd_$(1)),$(ECHO) '$(quiet_cmd_$(1))';)
 
 # >'< substitution is for echo to work,
 # >$< substitution to preserve $ when reloading .cmd file

@@ -52,7 +52,7 @@ all: xend
 xend: $(ROOT_DIR)
 
 $(objtree)/fixdep$(SUFFIX): $(XBUILD_DIR)/fixdep.c
-	@echo [HOSTCC] fixdep.c
+	@$(ECHO) '$(ECHO_HOSTCC)' fixdep.c
 ifeq ($(strip $(HOSTOS)),windows)
 ifeq ($(strip $(CP_FIXDEP),0)
 	@$(HOSTCC) -o $@ $< -lwsock32
@@ -72,11 +72,11 @@ $(ROOT_DIR):
 
 clean: $(ROOT_DIR)
 ifneq ($(wildcard $(objtree)/fixdep$(SUFFIX)),)
-	@echo [RM] fixdep
+	@$(ECHO) '$(ECHO_RM)' fixdep
 	@$(RM) $(objtree)/fixdep$(SUFFIX)
 endif
 ifneq ($(wildcard $(X_CONF_DIR)),)
-	@echo [RM] $(X_CONF_DIR)
+	@$(ECHO) '$(ECHO_RM)' $(X_CONF_DIR)
 	@$(RM) $(X_CONF_DIR)
 endif
 

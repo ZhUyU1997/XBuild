@@ -1,13 +1,13 @@
 include $(XBUILD_DIR)/include.mk
 
-quiet_cmd_cc_o_c = [CC] $(@:.o=)
+quiet_cmd_cc_o_c = $(ECHO_CC) $(@:.o=)
 cmd_cc_o_c = $(CC) $(X_CFLAGS) -MD -MF $(@D)/.$(@F).d $(X_CPPFLAGS) -c $< -o $@
 
-quiet_cmd_as_o_S = [AS] $(@:.o=)
+quiet_cmd_as_o_S = $(ECHO_CC) $(@:.o=)
 cmd_as_o_S = $(AS) $(X_ASFLAGS) -MD -MF $(@D)/.$(@F).d $(X_CPPFLAGS) -c $< -o $@
 
 # If the list of objects to link is empty, just create an empty built-in.o
-quiet_cmd_link_o_target = [LD] $(obj)/built-in.o
+quiet_cmd_link_o_target = $(ECHO_LD) $(obj)/built-in.o
 cmd_link_o_target = $(if $(strip $(X_OBJS)), \
 		      $(LD) -r -o $@ $(filter $(X_OBJS), $^), \
 		      $(RM) $@;$(AR) rcs $@)
@@ -24,15 +24,15 @@ $(obj)/%.c.o : $(src)/%.c FORCE
 # For module target
 ifneq ($(NAME),)
 ifeq ($(origin CUSTOM_TARGET_CMD),undefined)
-quiet_cmd_link_o_binary = [OUTPUT] $(obj)/$(NAME)$(SUFFIX)
+quiet_cmd_link_o_binary = $(ECHO_OUTPUT) $(obj)/$(NAME)$(SUFFIX)
 cmd_link_o_binary= $(CC) $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS) $(X_LDLIBS)
 
-quiet_cmd_ar_o_static = [AR] $(obj)/lib$(NAME).a
+quiet_cmd_ar_o_static = $(ECHO_AR) $(obj)/lib$(NAME).a
 cmd_ar_o_static = $(if $(strip $(X_OBJS)), \
 		      $(AR) rc $@ $(filter $(X_OBJS), $^), \
 		      $(RM) $@;$(AR) rcs $@)
 
-quiet_cmd_link_o_shared = [LD] $(obj)/lib$(NAME).$(SHARED_SUFFIX)
+quiet_cmd_link_o_shared = $(ECHO_LD) $(obj)/lib$(NAME).$(SHARED_SUFFIX)
 cmd_link_o_shared = $(CC) -shared $(X_CFLAGS) $(X_CPPFLAGS) $(X_OBJS) -o $@ $(X_LDFLAGS)  $(X_LDLIBS)
 
 $(obj)/$(NAME)$(SUFFIX) : $(X_OBJS) FORCE
