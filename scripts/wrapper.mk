@@ -54,7 +54,7 @@ xend: $(ROOT_DIR)
 $(objtree)/fixdep$(SUFFIX): $(XBUILD_DIR)/fixdep.c
 	@$(ECHO) '$(ECHO_HOSTCC)' fixdep.c
 ifeq ($(strip $(HOSTOS)),windows)
-ifeq ($(strip $(CP_FIXDEP),0)
+ifeq ($(strip $(CP_FIXDEP)),0)
 	@$(HOSTCC) -o $@ $< -lwsock32
 else
 	@$(CP) $(XBUILD_DIR)/fixdep$(SUFFIX) $(objtree)/fixdep$(SUFFIX)
