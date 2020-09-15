@@ -94,9 +94,9 @@ $(X_TARGET): $(X_MODULE)
 $(X_NAME): $(X_OBJS)
 
 clean:
-ifneq ($(strip $(wildcard $(X_TARGET) $(obj)/.*.cmd $(X_NAME) $(X_CLEAN))),)
+ifneq ($(strip $(wildcard $(X_TARGET) $(obj)/.*.cmd $(X_DEPS) $(X_CLEAN))),)
 	@$(ECHO) '$(ECHO_RM)' $(obj)
-	@$(RM) $(X_TARGET) $(wildcard $(obj)/.*.cmd) $(X_NAME) $(X_CLEAN)
+	@$(RM) $(X_TARGET) $(wildcard $(obj)/.*.cmd) $(X_DEPS) $(X_CLEAN)
 endif
 
 include $(XBUILD_DIR)/rule.mk
