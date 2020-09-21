@@ -51,7 +51,7 @@ endif
 X_CPPFLAGS	:= $(patsubst %, -I %, $(foreach d,$(X_INCDIRS),$(wildcard $(srctree)/$(d)))) $(patsubst %, -D%, $(X_DEFINES)) $(patsubst %, -include %, $(X_INCS))
 X_LDLIBS	:= $(patsubst %, -L%, $(X_LIBDIRS)) $(patsubst %, -l%, $(X_LIBS))
 
-export X_ASFLAGS X_CFLAGS X_LDFLAGS X_LIBDIRS X_LIBS X_DEFINES X_LDFLAGS X_INCDIRS X_INCS
+export X_ASFLAGS X_CFLAGS X_CXXFLAGS X_LDFLAGS X_LIBDIRS X_LIBS X_DEFINES X_LDFLAGS X_INCDIRS X_INCS
 
 X_CUR_OBJ	:=	$(foreach f,$(filter-out %/, $(SRC)),$(wildcard $(srctree)/$(src)/$(f)))
 X_CUR_OBJ	:=	$(patsubst $(srctree)/$(src)/%,$(obj)/%.o,$(X_CUR_OBJ))

@@ -6,6 +6,9 @@ cmd_cc_o_c = $(CC) $(X_CFLAGS) -MD -MF $(@D)/.$(@F).d $(X_CPPFLAGS) -c $< -o $@
 quiet_cmd_as_o_S = $(ECHO_AS) $(@:.o=)
 cmd_as_o_S = $(AS) $(X_ASFLAGS) -MD -MF $(@D)/.$(@F).d $(X_CPPFLAGS) -c $< -o $@
 
+quiet_cmd_cc_o_cpp = $(ECHO_CXX) $(@:.o=)
+cmd_cc_o_cpp = $(CXX) $(X_CXXFLAGS) -MD -MF $(@D)/.$(@F).d $(X_CPPFLAGS) -c $< -o $@
+
 # If the list of objects to link is empty, just create an empty built-in.o
 quiet_cmd_link_o_target = $(ECHO_LD) $(obj)/built-in.o
 cmd_link_o_target = $(if $(strip $(X_OBJS)), \
@@ -20,6 +23,9 @@ $(obj)/%.S.o : $(src)/%.S FORCE
 
 $(obj)/%.c.o : $(src)/%.c FORCE
 	$(call if_changed_dep,cc_o_c)
+
+$(obj)/%.cpp.o : $(src)/%.cpp FORCE
+	$(call if_changed_dep,cc_o_cpp)
 
 # For module target
 ifneq ($(NAME),)
