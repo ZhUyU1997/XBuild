@@ -9,10 +9,10 @@ $(X_CONF_DIR)/autoconf.h : FORCE
 	| sed -n -e "/\#define\s\+CONFIG_[[:alnum:]_]*/p" \
 	| sed -n -e "s/\s*$$//p" \
 	> $(X_CONF_DIR)/autoconf.temp
-	@$(CD) $(X_CONF_DIR) && grep -vxf autoconf.temp autoconf.h \
+	@$(CD) $(X_CONF_DIR) && grep -vxFf autoconf.temp autoconf.h \
 	| sed -n -e "s/\#define\s\+CONFIG_\([[:alnum:]_]*\).*/\L\1\E.h/p" \
 	| xargs touch autoconf.h
-	@$(CD) $(X_CONF_DIR) && grep -vxf autoconf.h autoconf.temp \
+	@$(CD) $(X_CONF_DIR) && grep -vxFf autoconf.h autoconf.temp \
 	| sed -n -e "s/\#define\s\+CONFIG_\([[:alnum:]_]*\).*/\L\1\E.h/p" \
 	| xargs touch autoconf.h
 	@$(RM) $(X_CONF_DIR)/autoconf.h
