@@ -6,6 +6,12 @@ comma   := ,
 squote  := '
 empty   :=
 space   := $(empty) $(empty)
+blank   :=
+
+define newline
+
+$(blank)
+endef
 
 ###
 # Escape single quote for use in echo statements
@@ -17,7 +23,7 @@ echo-cmd = $(if $(quiet_cmd_$(1)),$(ECHO) '$(quiet_cmd_$(1))';)
 # >$< substitution to preserve $ when reloading .cmd file
 # note: when using inline perl scripts [perl -e '...$$t=1;...']
 # in $(cmd_xxx) double $$ your perl vars
-make-cmd = $(subst \#,\\\#,$(subst $$,$$$$,$(call escsq,$(cmd_$(1)))))
+make-cmd = $(subst \#,\\\#,$(subst $$,$$$$,$(call escsq,$(subst $(newline),,$(cmd_$(1))))))
 
 ###
 # Shorthand for $(MAKE) -f scripts/build.mk obj=
@@ -27,8 +33,8 @@ build := -f $(XBUILD_DIR)/build.mk obj
 
 # Check if both arguments has same arguments. Result is empty string if equal.
 # User may override this check using make KBUILD_NOCMDDEP=1
-arg-check = $(strip $(filter-out $(cmd_$(1)), $(cmd_$@)) \
-                    $(filter-out $(cmd_$@),   $(cmd_$(1))) )
+arg-check = $(strip $(filter-out $(subst $(newline),,$(cmd_$(1))), $(cmd_$@)) \
+                    $(filter-out $(cmd_$@),$(subst $(newline),,$(cmd_$(1)))))
 
 # Find any prerequisites that is newer than target or that does not exist.
 # PHONY targets skipped in both cases.
